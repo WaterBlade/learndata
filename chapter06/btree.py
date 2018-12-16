@@ -1,6 +1,7 @@
 from collections import deque
 from logging import log
 import math
+import copy
 
 
 def stack()->list:
@@ -46,6 +47,13 @@ def postorder(node: BSTNode):
         visit(node)
 
 
+def preorder_print(node: BSTNode, cur_pre: str='', next_pre: str=''):
+    if node is not None:
+        print(cur_pre+str(node.el))
+        preorder_print(node.left, next_pre+'|-', next_pre+'| ')
+        preorder_print(node.right, next_pre+'|-', next_pre+'  ')
+
+
 class BST:
     def __init__(self):
         self.root = None  # type: BSTNode
@@ -86,6 +94,10 @@ class BST:
                     q.append(node.left)
                 if node.right is not None:
                     q.append(node.right)
+
+    def print_tree(self):
+        if self.root is not None:
+            preorder_print(self.root)
 
     def iterative_preorder(self):
         if self.root is not None:
@@ -269,7 +281,7 @@ class BST:
                     max_parent.right = max_in_left.left
 
     def _rotate_right(self, grand, parent, child):
-        if grand != self.root:
+        if parent != self.root:
             if grand.left == parent:
                 grand.left = child
             else:
@@ -278,7 +290,7 @@ class BST:
         child.right = parent
 
     def _rotate_left(self, grand, parent, child):
-        if grand != self.root:
+        if parent != self.root:
             if grand.left == parent:
                 grand.left = child
             else:
@@ -343,6 +355,8 @@ if __name__ == '__main__':
     tree.insert(85)
     tree.insert(95)
 
+    tree.print_tree()
+
     print('breadth_first')
     ret.clear()
     tree.breadth_first()
@@ -386,9 +400,8 @@ if __name__ == '__main__':
     ret.clear()
     tree.inorder()
     print(ret)
+    tree.print_tree()
 
     print('create backbone')
     tree._create_backbone()
-    ret.clear()
-    tree.breadth_first()
-    print(ret)
+    tree.print_tree()
