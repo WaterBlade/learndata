@@ -1,7 +1,5 @@
 from collections import deque
-from logging import log
 import math
-import copy
 
 
 def stack()->list:
@@ -286,6 +284,8 @@ class BST:
                 grand.left = child
             else:
                 grand.right = child
+        else:
+            self.root = child
         parent.left = child.right
         child.right = parent
 
@@ -295,27 +295,30 @@ class BST:
                 grand.left = child
             else:
                 grand.right = child
+        else:
+            self.root = child
         parent.right = child.left
         child.left = parent
 
     def _create_backbone(self):
-        p = self.root
-        grand = p
-        while p is not None:
-            if p.left is not None:
-                self._rotate_right(grand, p, p.left)
-                p = p.left
+        par = self.root
+        grand = par
+        while par is not None:
+            if par.left is not None:
+                child = par.left
+                self._rotate_right(grand, par, child)
+                par = child
             else:
-                grand = p
-                p = p.right
+                grand = par
+                par = par.right
 
     def _create_perfect_tree(self):
         p = self.root
 
-        n = 1
+        n = 0
         while p is not None:
-            p = p.right
             n += 1
+            p = p.right
 
         m = 2**(math.floor(math.log2(n+1))) - 1
 
@@ -323,12 +326,32 @@ class BST:
         grand = self.root
         parent = self.root
         child = parent.right
+
         while k > 0:
             self._rotate_left(grand, parent, child)
+            grand = child
+            parent = child.right
+            child = parent.right
+            k -= 1
+            self.print_tree()
 
+        while m > 1:
+            m = m//2
+            i = m
+            grand = self.root
+            parent = self.root
+            child = parent.right
+            while i > 0:
+                self._rotate_left(grand, parent, child)
+                self.print_tree()
+                grand = child
+                parent = child.right
+                child = parent.right
+                i -= 1
 
-    def balance(self, el, left, right):
-        pass
+    def balance(self):
+        self._create_backbone()
+        self._create_perfect_tree()
 
 
 if __name__ == '__main__':
@@ -403,5 +426,13 @@ if __name__ == '__main__':
     tree.print_tree()
 
     print('create backbone')
+    tree._rotate_right(tree.root, tree.root, tree.root.left)
+    tree.print_tree()
+    tree._rotate_right(tree.root, tree.root, tree.root.left)
+    tree.print_tree()
     tree._create_backbone()
+    tree.print_tree()
+
+    print('create perfect tree')
+    tree._create_perfect_tree()
     tree.print_tree()
