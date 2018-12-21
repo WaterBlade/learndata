@@ -5,6 +5,7 @@ Created on Thu Dec 13 19:11:52 2018
 @author: Administrator
 """
 
+
 class Statement:
     def __init__(self):
         self.variable_dict = {}
@@ -56,8 +57,7 @@ class Statement:
             self.move()
             
         return float(number)
-            
-    
+
     def factor(self):
         minus = 1.0
         while self.char == '+' or self.char == '-':
@@ -79,8 +79,7 @@ class Statement:
             var = self.findValue(id_)
             
         return minus * var
-    
-    
+
     def term(self):
         f = self.factor()
         while True:
@@ -90,8 +89,7 @@ class Statement:
                 f /= self.factor()
             else:
                 return f
-            
-    
+
     def expression(self):
         t = self.term()
         while True:
@@ -101,8 +99,7 @@ class Statement:
                 t -= self.term()
             else:
                 return t
-            
-    
+
     def statement(self):
         id_ = self.readId()
         while self.char.isspace():
@@ -144,20 +141,6 @@ def main():
         elif c == 'q':
             break
 
-            
-                
+
 if __name__ == '__main__':
     main()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-            
-    
-            
-        
